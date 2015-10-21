@@ -8,6 +8,10 @@ RomeoLinearActuator::RomeoLinearActuator(double& mydt)
     dt = mydt;
     Id.setIdentity();
 
+    CommandLimits = 0;
+    // commandLimitsH << 5.0;
+    // commandLimitsL << -5.0;
+
     A.setZero();
     A(0,1) = 1.0;
     A(2,2) = 1.0;
@@ -113,4 +117,19 @@ stateR_stateC_commandD_t& RomeoLinearActuator::getfxu()
 stateR_commandC_stateD_t& RomeoLinearActuator::getfux()
 {
     return fux;
+}
+
+bool& RomeoLinearActuator::useCommandLimits()
+{
+    return CommandLimits;
+}
+
+commandVec_t& RomeoLinearActuator::getCommandLimitsH()
+{
+    return commandLimitsH;
+}
+
+commandVec_t& RomeoLinearActuator::getCommandLimitsL()
+{
+    return commandLimitsL;
 }

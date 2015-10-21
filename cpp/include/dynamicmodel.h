@@ -19,6 +19,9 @@ private:
     unsigned int stateNb;
     unsigned int commandNb;
     double dt;
+    bool CommandLimits;
+    commandVec_t commandLimitsH;
+    commandVec_t commandLimitsL;
 
 protected:
 
@@ -41,6 +44,9 @@ public:
     virtual stateR_commandC_commandD_t& getfuu()=0;
     virtual stateR_stateC_commandD_t& getfxu()=0;
     virtual stateR_commandC_stateD_t& getfux()=0;
+    virtual bool& useCommandLimits()=0;
+    commandVec_t& getCommandLimitsH();
+    commandVec_t& getCommandLimitsL();
 };
 
 #endif // DYNAMICMODEL_H

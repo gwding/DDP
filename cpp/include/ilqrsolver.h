@@ -6,8 +6,10 @@
 #include "dynamicmodel.h"
 #include "costfunction.h"
 #include <Eigen/Dense>
+#include <qpOASES.hpp>
 
 using namespace Eigen;
+USING_NAMESPACE_QPOASES
 
 class ILQRSolver
 {
@@ -53,6 +55,7 @@ private:
     stateMat_t Qxx;
     commandVec_t Qu;
     commandMat_t Quu;
+    commandMat_t QuuBox;
     commandMat_t QuuInv;
     commandR_stateC_t Qux;
     commandVec_t k;
@@ -62,7 +65,7 @@ private:
     double alphaList[5];
     double alpha;
 
-
+    QProblemB* QPBox;
 
     double mu;
     stateMat_t muEye;

@@ -29,6 +29,10 @@ private:
     static const double Cf0=0.1;
     static const double a=10.0;
 
+    bool CommandLimits;
+    commandVec_t commandLimitsH;
+    commandVec_t commandLimitsL;
+
     stateMat_t Id;
     stateMat_t A;
     stateMat_t Ad;
@@ -63,6 +67,9 @@ public:
     stateR_commandC_commandD_t& getfuu();
     stateR_stateC_commandD_t& getfxu();
     stateR_commandC_stateD_t& getfux();
+    bool& useCommandLimits();
+    commandVec_t& getCommandLimitsH();
+    commandVec_t& getCommandLimitsL();
 
 };
 

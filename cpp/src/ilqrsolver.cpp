@@ -6,6 +6,7 @@ using namespace std;
 /* */
 
 using namespace Eigen;
+USING_NAMESPACE_QPOASES
 
 ILQRSolver::ILQRSolver(DynamicModel& myDynamicModel, CostFunction& myCostFunction)
 {
@@ -13,6 +14,7 @@ ILQRSolver::ILQRSolver(DynamicModel& myDynamicModel, CostFunction& myCostFunctio
     costFunction = &myCostFunction;
     stateNb = myDynamicModel.getStateNb();
     commandNb = myDynamicModel.getCommandNb();
+    *QPBox = QProblemB(commandNb);
 }
 
 void ILQRSolver::FirstInitSolver(stateVec_t& myxInit, stateVec_t& myxDes, unsigned int& myT,
@@ -61,7 +63,7 @@ void ILQRSolver::solveTrajectory()
             break;
         tmpxPtr = xList;
         tmpuPtr = uList;
-        xList = updatedxList;
+        xList = updatedxList; /* pointer inversion */
         updatedxList = tmpxPtr;
         uList = updateduList;
         updateduList = tmpuPtr;
@@ -93,6 +95,7 @@ void ILQRSolver::backwardLoop()
     {
         completeBackwardFlag = 1;
         muEye = mu*stateMat_t::Zero();
+        k.setZero();
         for(int i=T-1;i>=0;i--)
         {
             x = xList[i];
@@ -123,7 +126,22 @@ void ILQRSolver::backwardLoop()
                 break;
             }
 
+            if(dynamicModel->useCommandLimits())
+            {
+                /* solve QP */
+                /*H = Quu;
+                g = Qu;
+                lower = dynamicModel->getCommandLimitsL();
+                upper = dynamicModel->getCommandLimitsH();
+                x0Box = k;*/
+
+                /* QPoases */
+
+                /*Quu = QuuBox;*/
+            }
+
             QuuInv = Quu.inverse();
+
             k = -QuuInv*Qu;
             K = -QuuInv*Qux;
 
