@@ -1,8 +1,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "config.h"
-
 #include "ilqrsolver.h"
 #include "romeosimpleactuator.h"
 #include "romeolinearactuator.h"
@@ -17,6 +15,7 @@ using namespace Eigen;
 
 int main()
 {
+    typedef double f_precision;
     struct timeval tbegin,tend;
     double texec=0.0;
     stateVec_t xinit,xDes;
@@ -25,17 +24,17 @@ int main()
     xDes << 1.0,0.0,0.0,0.0;
 
     unsigned int T = 30;
-    double dt=1e-4;
+    f_precision dt=1e-4;
     unsigned int iterMax = 20;
-    double stopCrit = 1e-3;
+    f_precision stopCrit = 1e-3;
     stateVec_t* xList;
     commandVec_t* uList;
-    ILQRSolver::traj lastTraj;
+    ILQRSolver<f_precision,4,1>::traj lastTraj;
 
     RomeoSimpleActuator romeoActuatorModel(dt);
     RomeoLinearActuator romeoLinearModel(dt);
     CostFunctionRomeoActuator costRomeoActuator;
-    ILQRSolver testSolverRomeoActuator(romeoActuatorModel,costRomeoActuator);
+    ILQRSolver<f_precision,4,1> testSolverRomeoActuator(romeoActuatorModel,costRomeoActuator);
     testSolverRomeoActuator.FirstInitSolver(xinit,xDes,T,dt,iterMax,stopCrit);
 
 

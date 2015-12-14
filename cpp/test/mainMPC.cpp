@@ -32,12 +32,12 @@ int main()
     double stopCrit = 1e-3;
     stateVec_t* xList;
     commandVec_t* uList;
-    ILQRSolver::traj lastTraj;
+    ILQRSolver<double,4,1>::traj lastTraj;
 
     RomeoSimpleActuator romeoActuatorModel(dt);
     RomeoLinearActuator romeoLinearModel(dt);
     CostFunctionRomeoActuator costRomeoActuator;
-    ILQRSolver testSolverRomeoActuator(romeoActuatorModel,costRomeoActuator);
+    ILQRSolver<double,4,1> testSolverRomeoActuator(romeoActuatorModel,costRomeoActuator);
 
 
 
