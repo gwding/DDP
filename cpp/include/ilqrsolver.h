@@ -1,8 +1,6 @@
 #ifndef ILQRSOLVER_H
 #define ILQRSOLVER_H
 
-#include "config.h"
-
 #include "dynamicmodel.h"
 #include "costfunction.h"
 #include <Eigen/Dense>
@@ -14,8 +12,8 @@ class ILQRSolver
 public:
     struct traj
     {
-        stateVec_t* xList;
-        commandVec_t* uList;
+        VectorXd* xList;
+        VectorXd* uList;
         unsigned int iter;
     };
 
@@ -30,10 +28,10 @@ private:
     CostFunction* costFunction;
     unsigned int stateNb;
     unsigned int commandNb;
-    stateVec_t x;
-    commandVec_t u;
-    stateVec_t xInit;
-    stateVec_t xDes;
+    VectorXd x;
+    VectorXd u;
+    VectorXd xInit;
+    VectorXd xDes;
     unsigned int T;
     unsigned int iter;
     double dt;
@@ -41,44 +39,48 @@ private:
     double stopCrit;
     double changeAmount;
 
-    stateVec_t* xList;
-    commandVec_t* uList;
-    stateVec_t* updatedxList;
-    commandVec_t* updateduList;
+    VectorXd* xList;
+    VectorXd* uList;
+    VectorXd* updatedxList;
+    VectorXd* updateduList;
     struct traj lastTraj;
+    VectorXd* tmpxPtr;
+    VectorXd* tmpuPtr;
+    VectorXd zeroCommand;
 
-    stateVec_t nextVx;
-    stateMat_t nextVxx;
-    stateVec_t Qx;
-    stateMat_t Qxx;
-    commandVec_t Qu;
-    commandMat_t Quu;
-    commandMat_t QuuInv;
-    commandR_stateC_t Qux;
-    commandVec_t k;
-    commandR_stateC_t K;
-    commandVec_t* kList;
-    commandR_stateC_t* KList;
+    VectorXd nextVx;
+    MatrixXd nextVxx;
+    VectorXd Qx;
+    MatrixXd Qxx;
+    VectorXd Qu;
+    MatrixXd Quu;
+    MatrixXd QuuInv;
+    MatrixXd Qux;
+    VectorXd k;
+    MatrixXd K;
+    VectorXd* kList;
+    MatrixXd* KList;
     double alphaList[5];
     double alpha;
 
+    MatrixXd eye_stateSize;
 
 
     double mu;
-    stateMat_t muEye;
+    MatrixXd muEye;
     unsigned char completeBackwardFlag;
 
 protected:
     // methods //
 public:
-    void FirstInitSolver(stateVec_t& myxInit, stateVec_t& myxDes, unsigned int& myT,
+    void FirstInitSolver(VectorXd myxInit, VectorXd myxDes, unsigned int& myT,
                     double& mydt, unsigned int& myiterMax,double& mystopCrit);
-    void initSolver(stateVec_t& myxInit, stateVec_t& myxDes);
+    void initSolver(VectorXd myxInit, VectorXd myxDes);
     void solveTrajectory();
     void initTrajectory();
     void backwardLoop();
     void forwardLoop();
-    char isQuudefinitePositive(commandMat_t& Quu);
+    char isQuudefinitePositive(MatrixXd& Quu);
     struct traj getLastSolvedTrajectory();
 private:
 protected:
