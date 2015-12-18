@@ -15,6 +15,12 @@ using namespace Eigen;
 
 int main()
 {
+    typedef Eigen::Matrix<double,4,1> stateVec_t;
+    typedef Eigen::Matrix<double,1,1> commandVec_t;
+    typedef Eigen::Matrix<double,1,4> commandR_stateC_t;
+    typedef std::vector<stateVec_t> stateVecTab_t;
+    typedef std::vector<commandVec_t> commandVecTab_t;
+    typedef std::vector<commandR_stateC_t> commandR_stateC_tab_t;
     typedef double f_precision;
     struct timeval tbegin,tend;
     double texec=0.0;
@@ -23,12 +29,12 @@ int main()
     xinit << 0.0,0.0,0.0,0.0;
     xDes << 1.0,0.0,0.0,0.0;
 
-    unsigned int T = 30;
+    unsigned int T = 300;
     f_precision dt=1e-4;
     unsigned int iterMax = 20;
     f_precision stopCrit = 1e-3;
-    stateVec_t* xList;
-    commandVec_t* uList;
+    stateVecTab_t xList;
+    commandVecTab_t uList;
     ILQRSolver<f_precision,4,1>::traj lastTraj;
 
     RomeoSimpleActuator romeoActuatorModel(dt);

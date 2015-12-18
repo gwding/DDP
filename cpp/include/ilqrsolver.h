@@ -4,8 +4,10 @@
 #include "dynamicmodel.h"
 #include "costfunction.h"
 #include <Eigen/Dense>
+#include<Eigen/StdVector>
 
-using namespace Eigen;
+EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(MatrixXd)
+EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(VectorXd)
 
 template<typename precision,int stateSize,int commandSize>
 class ILQRSolver
@@ -34,11 +36,16 @@ class ILQRSolver
     typedef Eigen::Matrix<precision,stateSize,stateSize> stateR_stateC_commandD_t[commandSize];    // stateSize x stateSize x commandSize
     typedef Eigen::Matrix<precision,commandSize,commandSize> commandR_commandC_stateD_t[stateSize];    // commandSize x commandSize x stateSize
 
+    typedef std::vector<stateVec_t> stateVecTab_t;
+    typedef std::vector<commandVec_t> commandVecTab_t;
+    typedef std::vector<commandR_stateC_t> commandR_stateC_tab_t;
+
+
 public:
     struct traj
     {
-        stateVec_t* xList;
-        commandVec_t* uList;
+        stateVecTab_t xList;
+        commandVecTab_t uList;
         unsigned int iter;
     };
 
@@ -59,10 +66,12 @@ private:
     precision stopCrit;
     precision changeAmount;
 
-    stateVec_t* xList;
-    commandVec_t* uList;
-    stateVec_t* updatedxList;
-    commandVec_t* updateduList;
+    stateVecTab_t xList;
+    commandVecTab_t uList;
+    stateVecTab_t updatedxList;
+    commandVecTab_t updateduList;
+    stateVecTab_t tmpxPtr;
+    commandVecTab_t tmpuPtr;
     struct traj lastTraj;
 
     stateVec_t nextVx;
@@ -75,8 +84,8 @@ private:
     commandR_stateC_t Qux;
     commandVec_t k;
     commandR_stateC_t K;
-    commandVec_t* kList;
-    commandR_stateC_t* KList;
+    commandVecTab_t kList;
+    commandR_stateC_tab_t KList;
     precision alphaList[5];
     precision alpha;
 
@@ -103,14 +112,16 @@ public:
         iterMax = myiterMax;
         stopCrit = mystopCrit;
 
-        xList = new stateVec_t[myT+1];
-        uList = new commandVec_t[myT];
-        updatedxList = new stateVec_t[myT+1];
-        updateduList = new commandVec_t[myT];
+        xList.resize(myT+1);// = new stateVec_t[myT+1];
+        uList.resize(myT);// = new commandVec_t[myT];
+        updatedxList.resize(myT+1);// = new stateVec_t[myT+1];
+        updateduList.resize(myT);// = new commandVec_t[myT];
+        tmpxPtr.resize(myT+1);
+        tmpuPtr.resize(myT);
         k.setZero();
         K.setZero();
-        kList = new commandVec_t[myT];
-        KList = new commandR_stateC_t[myT];
+        kList.resize(myT);// = new commandVec_t[myT];
+        KList.resize(myT);// = new commandR_stateC_t[myT];
 
         alphaList[0] = 1.0;
         alphaList[1] = 0.8;
@@ -128,8 +139,6 @@ public:
 
     void solveTrajectory()
     {
-        stateVec_t* tmpxPtr;
-        commandVec_t* tmpuPtr;
         initTrajectory();
         for(iter=0;iter<iterMax;iter++)
         {
