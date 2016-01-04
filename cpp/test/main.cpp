@@ -69,7 +69,7 @@ int main()
 
 
 
-    ofstream fichier("/home/gkharish/softdev/DDP/cpp/src/results.csv",ios::out | ios::trunc);
+    ofstream fichier("results.csv",ios::out | ios::trunc);
     if(fichier)
     {
         fichier << "angular_position,angular_speed,angular_acceleration,u" << endl;

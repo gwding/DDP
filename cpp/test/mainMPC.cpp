@@ -107,7 +107,7 @@ int main()
     ILQRSolver testSolver(pneumaticarmModel,costPneumatic);
     
 
-    ofstream fichier("/home/gkharish/softdev/DDP/matlab/resultsMPC.csv",ios::out | ios::trunc);
+    ofstream fichier("resultsMPC.csv",ios::out | ios::trunc);
     if(!fichier)
     {
         cerr << "erreur fichier ! " << endl;
