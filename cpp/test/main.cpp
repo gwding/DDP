@@ -4,8 +4,10 @@
 #include "config.h"
 
 #include "ilqrsolver.h"
-#include "costfunctionpneumaticarmelbow.h"
-#include "pneumaticarm2nonlinearmodel.h"
+#include "romeosimpleactuator.h"
+#include "romeolinearactuator.h"
+#include "costfunctionromeoactuator.h"
+
 #include <time.h>
 #include <sys/time.h>
 
@@ -29,7 +31,7 @@ int main()
     unsigned int T = 3000;
     double dt=5e-3;
     unsigned int iterMax = 20;
-    double stopCrit = 1e-5;
+    double stopCrit = 1e-3;
     stateVec_t* xList;
     commandVec_t* uList;
     ILQRSolver::traj lastTraj;

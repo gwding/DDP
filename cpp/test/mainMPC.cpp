@@ -77,7 +77,7 @@ double  InverseModel (stateVec_t reference)
 
 int main()
 {
-   
+    cout << endl;
     struct timeval tbegin,tend;
     double texec=0.0;
     stateVec_t xinit,xDes, refDes;
@@ -85,7 +85,7 @@ int main()
     double Pfeed;
     PneumaticarmModel model;
     xinit << 0.0,   0.0, 0.0,   4.0*1e5;
-    //xDes << 1.0,    0.0, 2.0*1e5, 2.0*1e5;
+    xDes << 1.0,    0.0, 2.0*1e5, 2.0*1e5;
 
     unsigned int T = 10;
     unsigned int M = 3200;
@@ -93,7 +93,7 @@ int main()
     unsigned int lp = 0;
     double dt=5e-3;
     unsigned int iterMax = 20;
-    double stopCrit = 1e-5;
+    double stopCrit = 1e-3;
     stateVec_t* xList;
     commandVec_t* uList;
     ILQRSolver::traj lastTraj;
@@ -117,8 +117,7 @@ int main()
     fichier << "theta,ref, thetaDot,P1,P2,u1,u2" << endl;
 
 
-    //testSolverRomeoActuator.FirstInitSolver(xinit,xDes,T,dt,iterMax,stopCrit);
-    // Xdes Reference trajectory
+    testSolverRomeoActuator.FirstInitSolver(xinit,xDes,T,dt,iterMax,stopCrit);
 
     double pi = 3.14;
     gettimeofday(&tbegin,NULL);
@@ -173,6 +172,13 @@ int main()
     cout << texec/(T*1000000) << endl;
 
 //    fichier.close();
+
+
+
+
+
+
+
 
 
     return 0;
