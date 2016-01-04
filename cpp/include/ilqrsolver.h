@@ -71,14 +71,14 @@ private:
 protected:
     // methods //
 public:
-    void FirstInitSolver(stateVec_t& myxInit, unsigned int& myT,
+    void FirstInitSolver(stateVec_t& myxInit, stateVec_t& myxDes, unsigned int& myT,
                     double& mydt, unsigned int& myiterMax,double& mystopCrit);
-    void initSolver(stateVec_t& myxInit);
+    void initSolver(stateVec_t& myxInit, stateVec_t& myxDes);
     void solveTrajectory();
     void initTrajectory();
     void backwardLoop();
     void forwardLoop();
-    bool isQuudefinitePositive(const commandMat_t & Quu);
+    char isQuudefinitePositive(commandMat_t& Quu);
     struct traj getLastSolvedTrajectory();
 private:
 protected:

@@ -1,5 +1,5 @@
-#ifndef ROMEOLINEARACTUATOR_H
-#define ROMEOLINEARACTUATOR_H
+#ifndef PNEUMATICARM2NONLINEARMODEL_H
+#define PNEUMATICARM2NONLINEARMODEL_H
 
 #include "config.h"
 
@@ -8,10 +8,10 @@
 
 using namespace Eigen;
 
-class RomeoLinearActuator : public DynamicModel
+class Pneumaticarm2NonlinearModel : public DynamicModel
 {
 public:
-    RomeoLinearActuator(double& mydt);
+    Pneumaticarm2NonlinearModel(double& mydt);
 private:
 protected:
 
@@ -19,22 +19,25 @@ protected:
 public:
 private:
     double dt;
-    static const unsigned int stateNb=4;
-    static const unsigned int commandNb=1;
-    static const double k=1000.0;
-    static const double R=200.0;
-    static const double Jm=138*1e-7;
-    static const double Jl=0.1;
-    double fvm;
-    static const double Cf0=0.1;
-    static const double a=10.0;
+    double stateNb;
+   double commandNb;
+    // Muscle parameters
+    double lo, alphao, k,ro,R,a,b,emax,lb,lt,epsb,epst;
+    double time_constant1, time_constant2;
+
+   // Joint parameters 
+    double m;
+    double link_l;
+    double g;
+    double I;
+    double fv;
 
     stateMat_t Id;
     stateMat_t A;
     stateMat_t Ad;
     stateR_commandC_t B;
     stateR_commandC_t Bd;
-    double A13atan;
+    double A13atan,A10;
     double A33atan;
     stateMat_t fx,fxBase;
     stateTens_t fxx;
@@ -43,11 +46,15 @@ private:
     stateR_stateC_commandD_t fxu;
     stateR_commandC_stateD_t fux;
 
+    stateMat_t QxxCont;
+    commandMat_t QuuCont;
+    commandR_stateC_t QuxCont;
+
 protected:
     // methods //
 public:
-    stateVec_t computeNextState(double& dt, const stateVec_t& X,const commandVec_t &U);
-    void computeAllModelDeriv(double& dt, const stateVec_t& X,const commandVec_t &U);
+    stateVec_t computeNextState(double& dt, const stateVec_t& X, const commandVec_t &U);
+    void computeAllModelDeriv(double& dt, const stateVec_t& X, const commandVec_t &U);
     stateMat_t computeTensorContxx(const stateVec_t& nextVx);
     commandMat_t computeTensorContuu(const stateVec_t& nextVx);
     commandR_stateC_t computeTensorContux(const stateVec_t& nextVx);
@@ -66,4 +73,4 @@ public:
 
 };
 
-#endif // ROMEOLINEARACTUATOR_H
+#endif // PNEUMATICARM2ORDERMODEL_H

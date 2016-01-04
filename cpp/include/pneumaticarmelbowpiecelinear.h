@@ -1,5 +1,5 @@
-#ifndef ROMEOLINEARACTUATOR_H
-#define ROMEOLINEARACTUATOR_H
+#ifndef PNEUMATICARMELBOWPIECELINEAR_H
+#define PNEUMATICARMELBOWPIECELINEAR_H
 
 #include "config.h"
 
@@ -8,10 +8,10 @@
 
 using namespace Eigen;
 
-class RomeoLinearActuator : public DynamicModel
+class PneumaticarmElbowPieceLinear : public DynamicModel
 {
 public:
-    RomeoLinearActuator(double& mydt);
+   PneumaticarmElbowPieceLinear(double& mydt);
 private:
 protected:
 
@@ -19,7 +19,7 @@ protected:
 public:
 private:
     double dt;
-    static const unsigned int stateNb=4;
+    static const unsigned int stateNb=3;
     static const unsigned int commandNb=1;
     static const double k=1000.0;
     static const double R=200.0;
@@ -30,8 +30,8 @@ private:
     static const double a=10.0;
 
     stateMat_t Id;
-    stateMat_t A;
-    stateMat_t Ad;
+    stateMat_t A, A1, A2, A5, A7, A8, A9, A10, A11;
+    stateMat_t Ad, Ad1, Ad2, Ad5, Ad7, Ad8, Ad9, Ad10, Ad11;
     stateR_commandC_t B;
     stateR_commandC_t Bd;
     double A13atan;
@@ -46,7 +46,7 @@ private:
 protected:
     // methods //
 public:
-    stateVec_t computeNextState(double& dt, const stateVec_t& X,const commandVec_t &U);
+    stateVec_t computeNextState(double& dt, unsigned int opt, const stateVec_t& X,const commandVec_t &U);
     void computeAllModelDeriv(double& dt, const stateVec_t& X,const commandVec_t &U);
     stateMat_t computeTensorContxx(const stateVec_t& nextVx);
     commandMat_t computeTensorContuu(const stateVec_t& nextVx);
@@ -66,4 +66,4 @@ public:
 
 };
 
-#endif // ROMEOLINEARACTUATOR_H
+#endif
