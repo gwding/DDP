@@ -54,20 +54,22 @@ Pneumaticarm2orderModel::Pneumaticarm2orderModel(double& mydt)
 }
 
 
-stateVec_t Pneumaticarm2orderModel::computeNextState(double& dt, const stateVec_t& X,const commandVec_t& U)
+stateVec_t Pneumaticarm2orderModel::computeNextState(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
+    Xreal = X + Xdes;
     stateVec_t result = Ad*X + Bd*U;
-    result(1,0)-=A10*sin(X(0));
+    result(1,0)-=A10*sin(Xreal(0));
     //result(3,0)+=A33atan*atan(a*X(3,0));
 
     return result;
 }
 
-void Pneumaticarm2orderModel::computeAllModelDeriv(double& dt, const stateVec_t& X,const commandVec_t& U)
+void Pneumaticarm2orderModel::computeAllModelDeriv(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
+    Xreal = X + Xdes;
     fx = fxBase;
-    fx(1,0) -= A10*cos(X(0));
-    fxx[0](1,0)+= A10*sin(X(0));
+    fx(1,0) -= A10*cos(Xreal(0));
+    fxx[0](1,0)+= A10*sin(Xreal(0));
     //fxx[3](1,3) = -((2*dt*Jm*R)/(pi*Jl))*Cf0*((2*a*a*a*X(3,0))/((1+(a*a*X(3,0)*X(3,0)))*(1+(a*a*X(3,0)*X(3,0)))));
     //fxx[3](3,3) = +((2*dt*Cf0)/(pi*Jl))*((2*a*a*a*X(3,0))/((1+(a*a*X(3,0)*X(3,0)))*(1+(a*a*X(3,0)*X(3,0)))));
 }

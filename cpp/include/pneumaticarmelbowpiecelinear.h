@@ -29,6 +29,7 @@ private:
     static const double Cf0=0.1;
     static const double a=10.0;
 
+    stateVec_t Xreal;
     stateMat_t Id;
     stateMat_t A, A1, A2, A5, A7, A8, A9, A10, A11;
     stateMat_t Ad, Ad1, Ad2, Ad5, Ad7, Ad8, Ad9, Ad10, Ad11;
@@ -46,8 +47,8 @@ private:
 protected:
     // methods //
 public:
-    stateVec_t computeNextState(double& dt, unsigned int opt, const stateVec_t& X,const commandVec_t &U);
-    void computeAllModelDeriv(double& dt, const stateVec_t& X,const commandVec_t &U);
+    stateVec_t computeNextState(double& dt, unsigned int opt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t &U);
+    void computeAllModelDeriv(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t &U);
     stateMat_t computeTensorContxx(const stateVec_t& nextVx);
     commandMat_t computeTensorContuu(const stateVec_t& nextVx);
     commandR_stateC_t computeTensorContux(const stateVec_t& nextVx);

@@ -7,18 +7,21 @@ tauDotList = []
 qList = []
 qDotList = []
 uList = []
+uList2 = []
 
 finaltauList = []
 finaltauDotList = []
 finalqList = []
 finalqDotList = []
 finaluList = []
+finaluList2 = []
 
 tauListList = []
 tauDotListList = []
 qListList = []
 qDotListList = []
 uListList = []
+uListList2 = []
 
 ''' position '''
 path = '../_build/cpp/resultsMPC.csv'
@@ -38,6 +41,7 @@ with open(path,'r') as dataFile:
 				qList.append(float(row[2]))
 				qDotList.append(float(row[3]))
 				uList.append((float(row[4])))
+				uList2.append((float(row[5])))
 				j+=1
 			else:
 				tauListList.append(tauList)
@@ -45,11 +49,13 @@ with open(path,'r') as dataFile:
 				qListList.append(qList)
 				qDotListList.append(qDotList)
 				uListList.append(uList)
+				uListList2.append(uList2)
 				tauList = [float(row[0])]
 				tauDotList = [float(row[1])]
 				qList = [float(row[2])]
 				qDotList = [float(row[3])]
 				uList = [float(row[4])]
+				uList2 = [float(row[5])]
 				j = 0
 		if i==1:
 			i = 2 			
@@ -63,7 +69,8 @@ for i in range(N):
 	finaltauDotList.append(tauDotListList[i][0])
 	finalqList.append(qListList[i][0])
 	finalqDotList.append(qDotListList[i][0])
-	finaluList.append(uListList[i][0])           
+	finaluList.append(uListList[i][0]) 
+	finaluList2.append(uListList2[i][0])             
 
 #~ print len(tauListList[0])
 #~ print len(tauListList[1])

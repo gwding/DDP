@@ -81,8 +81,9 @@ PneumaticarmElbowPieceLinear::PneumaticarmElbowPieceLinear(double& mydt)
     fxu[0].setZero();
 }
 
-stateVec_t PneumaticarmElbowPieceLinear::computeNextState(double& dt, unsigned int operatingpoint, const stateVec_t& X,const commandVec_t& U)
+stateVec_t PneumaticarmElbowPieceLinear::computeNextState(double& dt, unsigned int operatingpoint, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
+   Xreal = X + Xdes;
    unsigned int i = operatingpoint;
    stateVec_t result;
    switch(operatingpoint)
@@ -115,7 +116,7 @@ stateVec_t PneumaticarmElbowPieceLinear::computeNextState(double& dt, unsigned i
    return result;
 }
 
-void PneumaticarmElbowPieceLinear::computeAllModelDeriv(double& dt, const stateVec_t& X,const commandVec_t& U)
+void PneumaticarmElbowPieceLinear::computeAllModelDeriv(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
 
 }

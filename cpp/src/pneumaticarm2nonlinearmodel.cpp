@@ -54,13 +54,13 @@ Pneumaticarm2NonlinearModel::Pneumaticarm2NonlinearModel(double& mydt)
 }
 
 
-stateVec_t Pneumaticarm2NonlinearModel::computeNextState(double& dt, const stateVec_t& X,const commandVec_t& U)
+stateVec_t Pneumaticarm2NonlinearModel::computeNextState(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
     stateVec_t result;
     stateVec_t jointstate_deriv;
     double co,theta, theta_dot, tb1,tb2,tb3,tt1,tt2_1,tt2,tt3_1,tt3,F1,F2,T,P1,P2,u1,u2, Tc1, Tc2;    
-    theta = X(0);
-    theta_dot = X(1);
+    theta = X(0)+Xdes(0);
+    theta_dot = X(1)+Xdes(1);
     P1 = U(0);
     P2 = U(1);
    
@@ -96,10 +96,10 @@ stateVec_t Pneumaticarm2NonlinearModel::computeNextState(double& dt, const state
     return result;
 }
 
-void Pneumaticarm2NonlinearModel::computeAllModelDeriv(double& dt, const stateVec_t& X,const commandVec_t& U)
+void Pneumaticarm2NonlinearModel::computeAllModelDeriv(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
     double co,theta,P1,P2;    
-    theta = X(0);
+    theta = X(0)+Xdes(0);
     P1 = U(0);
     P2 = U(1);
     co = pi*ro*ro;

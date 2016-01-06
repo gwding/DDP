@@ -43,13 +43,14 @@ PneumaticarmElbowLinear::PneumaticarmElbowLinear(double& mydt)
     fxu[0].setZero();
 }
 
-stateVec_t PneumaticarmElbowLinear::computeNextState(double& dt, const stateVec_t& X,const commandVec_t& U)
+stateVec_t PneumaticarmElbowLinear::computeNextState(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
+    Xreal = X + Xdes;
     stateVec_t result = Ad*X + Bd*U;
     return result;
 }
 
-void PneumaticarmElbowLinear::computeAllModelDeriv(double& dt, const stateVec_t& X,const commandVec_t& U)
+void PneumaticarmElbowLinear::computeAllModelDeriv(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
 
 }

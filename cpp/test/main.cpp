@@ -4,9 +4,15 @@
 #include "config.h"
 
 #include "ilqrsolver.h"
-#include "romeosimpleactuator.h"
+/*#include "romeosimpleactuator.h"
 #include "romeolinearactuator.h"
-#include "costfunctionromeoactuator.h"
+#include "costfunctionromeoactuator.h"*/
+#include "costfunctionpneumaticarmelbow.h"
+//#include "pneumaticarmelbowlinear.h"
+#include "pneumaticarmnonlinearmodel.h"
+#include "pneumaticarm2nonlinearmodel.h"
+//#include "pneumaticarm_model.h"
+
 
 #include <time.h>
 #include <sys/time.h>
@@ -25,12 +31,12 @@ int main()
     //xDes << 1.0,0.0,0.0,0.0;
     //xinit << 0.0,   0.0,    0.0,    4.0*1e5;
     //xDes << 1.0,    0.0,    2.0*1e5,    2.0*1e5;
-    xinit << 0.0,0.0,0.0,4.0*1e5;
-    xDes << 1.0,0.0,2.0*1e5,    2.0*1e5;
+    xinit << -0.1,0.0,0.0,4.0*1e5;
+    xDes << 0.3,0.0,2.0*1e5,    2.0*1e5;
     
-    unsigned int T = 3000;
+    unsigned int T = 900;
     double dt=5e-3;
-    unsigned int iterMax = 20;
+    unsigned int iterMax = 100;
     double stopCrit = 1e-3;
     stateVec_t* xList;
     commandVec_t* uList;
@@ -38,21 +44,21 @@ int main()
    
     Pneumaticarm2NonlinearModel pneumaticarmModel(dt);
     CostFunctionPneumaticarmElbow costPneumatic;
-    ILQRSolver testSolverRomeoActuator(pneumaticarmModel,costPneumatic);
+    ILQRSolver testSolver(pneumaticarmModel,costPneumatic);
 
     //RomeoSimpleActuator romeoActuatorModel(dt);
     //RomeoLinearActuator romeoLinearModel(dt);
     //CostFunctionRomeoActuator costRomeoActuator;
     //ILQRSolver testSolverRomeoActuator(romeoActuatorModel,costRomeoActuator);
-    testSolverRomeoActuator.FirstInitSolver(xinit,xDes,T,dt,iterMax,stopCrit);
+    testSolver.FirstInitSolver(xinit,xDes,T,dt,iterMax,stopCrit);
 
 
-    int N = 100;
+    int N = 1;
     gettimeofday(&tbegin,NULL);
-    for(int i=0;i<N;i++) testSolverRomeoActuator.solveTrajectory();
+    for(int i=0;i<N;i++) testSolver.solveTrajectory();
     gettimeofday(&tend,NULL);
 
-    lastTraj = testSolverRomeoActuator.getLastSolvedTrajectory();
+    lastTraj = testSolver.getLastSolvedTrajectory();
     xList = lastTraj.xList;
     uList = lastTraj.uList;
     unsigned int iter = lastTraj.iter;

@@ -88,16 +88,17 @@ PneumaticarmNonlinearModel::PneumaticarmNonlinearModel(double& mydt)
 }
 
 
-stateVec_t PneumaticarmNonlinearModel::computeNextState(double& dt, const stateVec_t& X,const commandVec_t& U)
+stateVec_t PneumaticarmNonlinearModel::computeNextState(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
+    Xreal = X + Xdes;
     //    result(1,0)-=A10*sin(X(0));
     //result(3,0)+=A33atan*atan(a*X(3,0));
     stateVec_t jointstate_deriv;
     double co,theta, theta_dot, tb1,tb2,tb3,tt1,tt2_1,tt2,tt3_1,tt3,F1,F2,T,P1,P2,u1,u2, Tc1, Tc2;    
-    theta = X(0);
-    theta_dot = X(1);
-    P1 = X(2);
-    P2 = X(3);
+    theta = Xreal(0);
+    theta_dot = Xreal(1);
+    P1 = Xreal(2);
+    P2 = Xreal(3);
     u1 = U(0);
     u2 = U(1);
     Tc1 = time_constant1;
@@ -179,20 +180,20 @@ stateVec_t PneumaticarmNonlinearModel::computeNextState(double& dt, const stateV
     jointstate_deriv(1) = ((F1 -F2 )*R  - fv*theta_dot - m*g*0.5*link_l*sin(theta))/I;
     jointstate_deriv(2) = (-P1/Tc1) + (u1/Tc1);
     jointstate_deriv(3) = (-P2/Tc2) + (u2/Tc2);
-    stateVec_t result = X + dt*jointstate_deriv; 
+    stateVec_t result = X + dt*jointstate_deriv;
    
     fx = Ad;
     return result;
 }
 
-void PneumaticarmNonlinearModel::computeAllModelDeriv(double& dt, const stateVec_t& X,const commandVec_t& U)
+void PneumaticarmNonlinearModel::computeAllModelDeriv(double& dt, const stateVec_t& X,const stateVec_t& Xdes,const commandVec_t& U)
 {
     //fx = fxBase;
-  
+    Xreal = X + Xdes;
     double co,theta,P1,P2;    
-    theta = X(0);
-    P1 = X(2);
-    P2 = X(3);
+    theta = Xreal(0);
+    P1 = Xreal(2);
+    P2 = Xreal(3);
     co = pi*ro*ro;
 
     fxx[0](1,0) = (m*g*0.5*link_l*sin(theta)/I) + 2*co*a*pow((k*R/lo),2)*(P1 - P2)*(R/I);
